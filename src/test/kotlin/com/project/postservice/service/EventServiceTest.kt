@@ -1,6 +1,7 @@
 package com.project.postservice.service
 
 import com.project.postservice.configuration.DateTimeProvider
+import com.project.postservice.exception.EventNotFoundException
 import com.project.postservice.model.CreateEventRequest
 import com.project.postservice.model.Event
 import com.project.postservice.repository.EventRepository
@@ -17,7 +18,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
-import java.lang.RuntimeException
 import java.time.LocalDateTime
 import java.util.*
 import org.mockito.Mockito.`when` as on
@@ -97,7 +97,7 @@ internal class EventServiceTest {
     internal fun getEvent_whenEventDoesNotExist_throwsException() {
         on(eventRepository.findById(anyString())).thenReturn(Optional.empty())
 
-        val exception = assertThrows<RuntimeException> { 
+        val exception = assertThrows<EventNotFoundException> { 
             subject.getEvent(EVENT_ID) 
         }
         

@@ -1,6 +1,7 @@
 package com.project.postservice.service
 
 import com.project.postservice.configuration.DateTimeProvider
+import com.project.postservice.exception.ExceptionFactory
 import com.project.postservice.model.CreateEventRequest
 import com.project.postservice.model.Event
 import com.project.postservice.model.EventDto
@@ -29,9 +30,8 @@ class EventService(private val eventRepository: EventRepository,
         logger.debug { "Looking for the event with id: $id" }
         
         val event = eventRepository.findById(id).orElseThrow {
-            val errorMessage = "Event with id: $id not found"
-            logger.error { errorMessage }
-            RuntimeException(errorMessage)
+            logger.error { "Event with id: $id not found" }
+            ExceptionFactory.createEventNotFoundException(id)
         }
 
         return eventTransformer.toDto(event)
