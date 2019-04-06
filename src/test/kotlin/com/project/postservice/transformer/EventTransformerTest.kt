@@ -1,23 +1,16 @@
 package com.project.postservice.transformer
 
-import com.project.postservice.configuration.DateTimeProvider
-import com.project.postservice.model.CreateEventRequest
 import com.project.postservice.model.Event
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.`when` as on
-import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.LocalDateTime
+import org.mockito.Mockito.`when` as on
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(SpringExtension::class)
 internal class EventTransformerTest {
-    @Mock
-    private lateinit var dateTimeProvider: DateTimeProvider
-    @InjectMocks
-    private lateinit var subject: EventTransformer
+    private val subject = EventTransformer()
     
     @Test
     internal fun toDto_transformsEntityToDto() {
@@ -32,19 +25,4 @@ internal class EventTransformerTest {
         assertThat(actual.content).isEqualTo(expected.content)
         assertThat(actual.createdDate).isEqualTo(expected.createdDate)
     }
-
-    @Test
-    internal fun toEntity_transformsRequestToEntity() {
-        val createdDate = LocalDateTime.of(2019, 3, 5, 1, 4)
-        val expected = CreateEventRequest("Content", 21)
-        
-        on(dateTimeProvider.now()).thenReturn(createdDate)
-
-        val actual = subject.toEntity(expected)
-
-        assertThat(actual.authorId).isEqualTo(expected.authorId)
-        assertThat(actual.content).isEqualTo(expected.content)
-        assertThat(actual.createdDate).isEqualTo(createdDate)
-    }
-    
 }

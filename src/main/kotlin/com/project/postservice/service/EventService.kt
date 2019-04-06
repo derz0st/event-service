@@ -1,6 +1,8 @@
 package com.project.postservice.service
 
+import com.project.postservice.configuration.DateTimeProvider
 import com.project.postservice.model.CreateEventRequest
+import com.project.postservice.model.Event
 import com.project.postservice.model.EventDto
 import com.project.postservice.repository.EventRepository
 import com.project.postservice.transformer.EventTransformer
@@ -9,12 +11,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class EventService(private val eventRepository: EventRepository,
-                   private val eventTransformer: EventTransformer) {
+                   private val eventTransformer: EventTransformer,
+                   private val dateTimeProvider: DateTimeProvider) {
     private val logger = KotlinLogging.logger {}
     
     fun createEvent(eventRequest: CreateEventRequest): EventDto {
         logger.debug { "Going to persist event: $eventRequest" }
-        val event = eventTransformer.toEntity(eventRequest)
+        val event = toEntity(eventRequest)
         
         val savedEvent = eventRepository.save(event)
         logger.info { "Event is created: $savedEvent" }
@@ -33,4 +36,7 @@ class EventService(private val eventRepository: EventRepository,
 
         return eventTransformer.toDto(event)
     }
+    
+    private fun toEntity(request: CreateEventRequest) =
+            Event(request.content, request.authorId, dateTimeProvider.now())
 }
