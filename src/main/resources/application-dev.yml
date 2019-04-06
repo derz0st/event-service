@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      username: event-service-db-user
+      password: event-service-db-password
+      database: admin
+#      host: http://localhost:27017
