@@ -6,7 +6,6 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'kotlin-spring'
-//apply plugin: 'kotlin-jpa'
 
 group = 'com.project'
 version = '0.0.1-SNAPSHOT'
@@ -31,24 +30,27 @@ repositories {
 }
 
 dependencies {
+	annotationProcessor 'org.projectlombok:lombok'
+	
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	testRuntime 'org.springframework:spring-jdbc'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-	compile "org.springframework.boot:spring-boot-starter-web"
+	
 	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testCompile('org.junit.jupiter:junit-jupiter-api:5.4.0')
-	
-	testCompile "org.testcontainers:testcontainers:1.11.1"
-//	compile group: 'com.avides.springboot.testcontainer', name: 'springboot-testcontainer-mongodb', version: '0.1.0-RC10'
-	testCompile "org.testcontainers:junit-jupiter:1.11.1"
-	
-	testCompile "org.mockito:mockito-junit-jupiter:2.23.0"
+
 	compile 'io.github.microutils:kotlin-logging:1.6.24'
 	compile 'org.modelmapper:modelmapper:2.3.2'
-	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.0')
+	compile 'org.springframework.boot:spring-boot-starter-web'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	testCompile 'org.junit.jupiter:junit-jupiter-api:5.4.0'
+	testCompile 'org.testcontainers:testcontainers:1.11.1'
+	testCompile 'org.testcontainers:junit-jupiter:1.11.1'
+	testCompile 'org.mockito:mockito-junit-jupiter:2.23.0'
+
+	testRuntime 'org.springframework:spring-jdbc'
+	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
 }
 
 compileKotlin {
