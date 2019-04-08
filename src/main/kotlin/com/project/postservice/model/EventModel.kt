@@ -16,6 +16,8 @@ data class CreateEventRequest(
         val authorId: Long
 )
 
+fun Event.toDto(): EventDto = EventDto(getId()!!, content, authorId, createdDate)
+
 data class EventDto(
         @JsonProperty("id")
         val id: String,

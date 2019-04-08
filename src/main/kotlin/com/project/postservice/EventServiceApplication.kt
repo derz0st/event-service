@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class PostServiceApplication
+class EventServiceApplication
 
 fun main(args: Array<String>) {
-	runApplication<PostServiceApplication>(*args)
+	runApplication<EventServiceApplication>(*args)
 }

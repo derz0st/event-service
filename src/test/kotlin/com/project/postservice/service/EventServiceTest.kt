@@ -5,7 +5,6 @@ import com.project.postservice.exception.EventNotFoundException
 import com.project.postservice.model.CreateEventRequest
 import com.project.postservice.model.Event
 import com.project.postservice.repository.EventRepository
-import com.project.postservice.transformer.EventTransformer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,7 +15,6 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
-import org.mockito.Spy
 import org.mockito.junit.jupiter.MockitoExtension
 import java.time.LocalDateTime
 import java.util.*
@@ -31,12 +29,10 @@ internal class EventServiceTest {
     private lateinit var eventRepository: EventRepository
     @Mock
     private lateinit var dateTimeProvider: DateTimeProvider
-    @Spy
-    private lateinit var eventTransformer: EventTransformer
     @InjectMocks
     private lateinit var subject: EventService
     private val captor = ArgumentCaptor.forClass(Event::class.java)
-    
+
     @Test
     internal fun createEvent_fillDateAndCallRepository() {
         val dateTime = LocalDateTime.now()
@@ -45,12 +41,12 @@ internal class EventServiceTest {
 
         on(dateTimeProvider.now()).thenReturn(dateTime)
         on(eventRepository.save(any<Event>())).then { expected }
-        
+
         val request = CreateEventRequest(CONTENT, AUTHOR_ID)
         subject.createEvent(request)
-        
+
         verify(eventRepository).save(captor.capture())
-        
+
         val eventToSave = captor.value
         assertThat(eventToSave.getId()).isNull()
         assertThat(eventToSave.authorId).isEqualTo(expected.authorId)
@@ -68,7 +64,7 @@ internal class EventServiceTest {
         on(eventRepository.save(any<Event>())).then { expected }
 
         val actual = subject.createEvent(CreateEventRequest(CONTENT, AUTHOR_ID))
-        
+
         assertThat(actual.id).isEqualTo(expected.getId())
         assertThat(actual.authorId).isEqualTo(expected.authorId)
         assertThat(actual.content).isEqualTo(expected.content)
@@ -84,7 +80,7 @@ internal class EventServiceTest {
         on(eventRepository.findById(anyString())).thenReturn(Optional.of(expected))
 
         val actual = subject.getEvent(EVENT_ID)
-        
+
         verify(eventRepository).findById(EVENT_ID)
 
         assertThat(actual.id).isEqualTo(expected.getId())
@@ -97,10 +93,10 @@ internal class EventServiceTest {
     internal fun getEvent_whenEventDoesNotExist_throwsException() {
         on(eventRepository.findById(anyString())).thenReturn(Optional.empty())
 
-        val exception = assertThrows<EventNotFoundException> { 
-            subject.getEvent(EVENT_ID) 
+        val exception = assertThrows<EventNotFoundException> {
+            subject.getEvent(EVENT_ID)
         }
-        
+
         assertThat(exception.message).isEqualTo("Event with id: $EVENT_ID not found")
     }
 }
